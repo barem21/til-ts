@@ -87,8 +87,8 @@ result = hello(10); //오류
 
 ## 5. string, number, boolean
 
-- 위의 타입은 `각각의 리터럴 타입`의 수
-- 위의 타입은 각각 any, unknown의
+- 위의 타입은 각각의 리터럴 타입의 수퍼타입이다.
+- 위의 타입은 각각 any, unknonw 의 서브타입이다.
 
 ```ts
 //리터럴은 실제 값을 말한다.
