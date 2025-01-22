@@ -1,110 +1,157 @@
-# 타입 호환성
+# 객체 타입 호환성
 
-- SuperType : 더 많은 값을 포함하는 타입
-- SubType : 특정 값이나 조건을 가진 타입
+## 1. object 타입의 호환성
 
-## 예시
-
-- Animal은 수퍼타입
-- Cat은 서브타입
-
-## 1. any
-
-- 타입스크립트 `최상위 수퍼타입`입니다.
-- 어떤 타입도 `any의 서브타입`이 됩니다.
+- object는 모든 객체 타입의 수퍼타입이다.
+- object는 any, unknown의 서브타입이다.
 
 ```ts
-let value: any;
+let obj: {
+  name: string;
+} = {
+  name: "kim",
+};
 
-value = "hello"; //string은 any의 서브타입이라서 할당가능
-value = 1; //number는 any의 서브타입이라서 할당가능
-value = true; //boolean은 any의 서브타입이라서 할당가능
+let obj2: object = { name: "kim" };
+
+let a: any = obj;
+let b: unknown = obj2;
 ```
 
-## 2. unknown
+## 2. Array 타입의 호환성
 
-- unknown은 모든 타입의 수퍼타입입니다.
-- 하지만 반드시 타입체크를 직접해야 합니다. (타입가드)
-- typeof 등등
+- Array<any>은 모든 배열 타입의 수퍼타입이다.
+- Array<특정타입>은 더 구체적인 배열 타입의 수퍼타입이다.
 
 ```ts
-let value: unknown;
+let numArr: number[] = [1, 2, 3];
+let numArr2: Array<number> = [1, 2, 3];
 
-value = "hello"; //string은 unknown의 서브타입이라서 할당가능
-value = 1; //number는 unknown의 서브타입이라서 할당가능
-value = true; //boolean은 unknown의 서브타입이라서 할당가능
-
-//담겨진 unknown을 활용하려면 타입체크 필요
-if (typeof value === "string") {
-  value.toUpperCase(); //대문자로 바꾸기
-}
+//Array<any>는 Array<number>의 수퍼타입이다.
+let anyArr: Array<any> = numArr;
+let anyArr2: any[] = numArr2;
 ```
 
-- unknown은 다른 타입의 서브 타입이 아니다.
+## 3. 유니온 타입의 호환성 (합집합)
+
+- 아래 문장은 기본형 타입의 유니온
+- 문자열, 또는 숫자형 데이터를 대입할 수 있다.
+- 합집합 (서로 연관성이 전혀 없는 데이터 형을 조합한 새로운 타입정의)
 
 ```ts
-//js를 마이그레이션 하면서 any를 조심하다보니 unknown을 사용함
-let value: unknown = "hi";
-
-//아래 구문처럼 unknown 타입을 서브 타입으로 타입 캐스팅하면서 오류 발생
-let word: string = value; //오류
+type StringNumber = string | number;
 ```
 
-## 3. never
-
-- never는 수퍼타입이 될 수 없다.
-- never는 존재할 수 없는 값이다.
-- never는 모든 타입의 서브 타입이다.
+- `A | B는 A 또는 B를 포함`하는 두 타입의 `수퍼타입`이다.
 
 ```ts
-let value: never;
-//never는 수퍼타입이 될 수 없다.
-value = 5; //오류
+type StringNumber = string | number;
+
+//문자열은 StringNumber 타입의 서브타입이므로 업캐스팅됨
+let now: StringNumber = "hello";
+
+//숫자데이터는 StringNumber 타입의 서브타입이므로 업캐스팅됨
+now = 10;
 ```
 
-## 4. void
+### 3.1. 데이터를 변수에 담아서 `변수로 전달`할 때
 
-- void는 undefined의 수퍼타입이다.
-- void는 any나 unknown의 서브타입이 될 수 있다.
+- 같은 종류의 데이터라고 인정해줘 (객체 타입 호환성)
 
 ```ts
-let value: void;
-let go: undefined = undefined;
-//void는 undefined의 수퍼타입이다.
-value = go;
-value = undefined;
-
-//any나 unknown이 아니므로
-value = 5; //오류
-
-function hello(_count: number): string {
-  return "hello" + _count;
-}
-let result: void;
-//string은 void의 서브타입이 아니라서 호환안됨
-result = hello(10); //오류
+type Animal = {
+  name: string;
+  age: number;
+};
+type Yaong = {
+  name: string;
+  age: number;
+  color: string;
+};
 ```
 
-## 5. string, number, boolean
-
-- 위의 타입은 `각각의 리터럴 타입`의 수
-- 위의 타입은 각각 any, unknown의
+- `변수로 전달`할 때
 
 ```ts
-//리터럴은 실제 값을 말한다.
-//아래는 "hello"는 "hello"라는 리터럴이다.
-let constStr: "hello" = "hello";
-// const 상수로 만들면 값은 "hello"로 고정된다.
-//그러나 어찌되었든 "hello" string
+const cat: Yaong = {
+  name: "cat",
+  age: 5,
+  color: "Black",
+};
 
-//"hello" 리터럴은 문자열에 포함된다. (업캐스팅된다.)
-let str: string = constStr;
+//Animal 타입은 name, age만 있어야 한다.
+//Cat 타입은 name, age 외에 color가 있어야 한다.
+//ts에서는 객체 값을 입력할 때 속성을 비교한다.
+//프로퍼티 개수가 적은 타입에 프로퍼티 개수가 많은 타입은 업캐스팅된다.
+//최소 조건을 만족하면 인정
+const ani3: Animal = cat;
+```
 
-//리터럴로 표현하면
-let num: 100 = 100;
-//100 리터럴은 숫자형에 포함된다. (업캐스팅된다.)
-let num2: number = num;
+### 3.2. 데이터를 `객체리터럴`에 담아서 전달할 때
 
-//false 리터럴은 boolean에 포함된다. (업캐스팅된다.)
-const isLive: boolean = false;
+```ts
+//변수에 담겨진 형태가 아닌 객체 리터럴로 전달하면 프로퍼티 초과 오류가 발생
+const ani5: Animal = { name: "dog", age: 10, color: "white" }; //오류(color)
+```
+
+### 3.3. 데이터를 변수로 담아서 전달
+
+```ts
+const ani: Animal = {
+  name: "dog",
+  age: 10,
+};
+
+//Yaong의 name, age, color 필수 프로퍼티를 충족하지 못함
+const ani4: Yaong = ani; //오류(color 없음)
+```
+
+### 3.4. 유니온 샘플
+
+```ts
+type Animal = {
+  name: string;
+  age: number;
+};
+type Yaong = {
+  name: string;
+  age: number;
+  color: string;
+};
+type Sample = Animal | Yaong;
+
+const zoo: Animal = { age: 10, name: "lion" };
+const tiger: Yaong = { age: 5, name: "tiger", color: "White" };
+const now: Sample = zoo;
+const now2: Sample = tiger;
+const now3: Sample = { age: 10, name: "fox", color: "Red" };
+//실제타입은 3가지가 나온다.
+//{age:number, name:string}
+//{age:number, name:string, color:string}
+//{age:number, name:string, color:string}
+```
+
+## 4. 인터섹션 타입 (A & B, 교집합)
+
+- A & B는 A도 만족하고 B도 만족하는 타입
+- A & B는 A와 B 모두의 서브타입
+
+```ts
+type Sample = number & string;
+//서로 교차하는 공통의 데이터가 종류가 없음
+// 결코 존재할 수 없는 타입이므로 never 타입이 된다.
+const go: Sample = 1; //오류
+```
+
+```ts
+type Animal = { name: string };
+type Yaong = { age: number };
+type Sample = Animal & Yaong;
+
+//속성이 하나만 누락되어도 오류
+const lion: Sample = { name: "lion" }; //오류
+const tiger: Sample = { age: 5 }; //오류
+
+//Sample 타입은 Animal과 Yaong 모두의 서브타입
+const puma: Sample = { name: "puma", age: 10 }; //정상
 ```
