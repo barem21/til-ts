@@ -1,7 +1,4 @@
-type Animal = { name: string };
-type Yaong = { age: number };
-type Sample = Animal & Yaong;
+//10은 number이고 never은 모든 타입의 서브타입이므로 타입 단언이 가능하다.
+let num = 10 as never;
 
-const lion: Sample = { name: "lion" }; //오류
-const tiger: Sample = { age: 5 }; //오류
-const puma: Sample = { name: "puma", age: 10 }; //정상
+let num2 = 10 as unknown;
