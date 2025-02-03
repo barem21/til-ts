@@ -1,15 +1,32 @@
-//아래 상황은 Person이 하나로 합쳐진다.
-interface Person {
+//약속을 지켜라
+interface CarInterface {
   name: string;
+  brand: string;
+  price: number;
+  move(): void;
+  stop(): void;
 }
-interface Person {
-  name: string;
-  age: number;
+
+interface ElectricInterface {
+  battery: number;
+  isBattery: boolean;
 }
-interface Male extends Person {
-  name: "gildong";
+
+//인터페이스를 구현
+class ElectricCar implements CarInterface, ElectricInterface {
+  constructor(
+    public name: string,
+    public brand: string,
+    public price: number,
+    public battery: number,
+    public isBattery: boolean
+  ) {}
+  move() {
+    console.log("움직여라!");
+  }
+  stop() {
+    console.log("멈춰라!");
+  }
 }
-const who: Male = {
-  name: "고길동", //오류 발생
-  age: 10,
-};
+
+let modelX = new ElectricCar("modelX", "tesla", 10000, 10, true);
