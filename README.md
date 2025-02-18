@@ -497,7 +497,7 @@ if (dateOrString instanceof Date) {
   dateOrString; //let dateOrString: string
 }
 
-//Discriminated Inion
+//Discriminated Union
 //특정 속성에 상수로 문자열을 배치해서 비교하여 타입 좁히기
 interface Animal {
   type: "dog" | "human";
