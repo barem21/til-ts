@@ -1,7 +1,6 @@
 # Primitive (기본데이터 형)
 
 - js와 ts에 모두 있는 데이터형
--
 
 ```ts
 //Primitive (기본데이터 형)
