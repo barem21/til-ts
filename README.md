@@ -765,7 +765,7 @@ if (isDogTypeReturn(dogs)) {
 }
 ```
 
-# type 과 interface 의 차이 3
+# type과 interface의 차이
 
 - 1번은 type과 interface는 만드는 법이 다르더라.
 
