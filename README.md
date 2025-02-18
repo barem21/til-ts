@@ -1079,7 +1079,6 @@ const kim: TPerson = {
 
 ```ts
 //객체 끼리의 union
-
 const dogCat = Math.random() > 0.5 ? { name: "강아지", age: 5 } : { name: "야옹이", breed: "코숏" };
 dogCat; //const DogCat:{name:string;age:number;breed?:undefined;} | {name:string;breed:string;age?:undefined;}
 dogCat.name; //(property) name: string
@@ -1101,7 +1100,7 @@ dogCat2.name;
 dogCat2.age; //오류 발생
 dogCat2.breed; //오류 발생
 
-// 타입 좁히기로 데이터 파악
+//타입 좁히기로 데이터 파악
 if ("age" in dogCat2) {
   // const dogCat2: Dog
   dogCat2;
@@ -1169,12 +1168,12 @@ type UserApiState3 = {
 };
 
 //API 타입 5
-// 유틸리티 타입 (수요일 쯤에 정리해 드릴께요.)
+//유틸리티 타입 (수요일 쯤에 정리해 드릴께요.)
 
-// Pick 원하는 것만 뽑을 경우
+//Pick 원하는 것만 뽑을 경우
 type UserApiState4 = Pick<ApiState, "getUser" | "paginateUser" | "defeceUser">;
 
-// Omit 원하는 것만 제외하는 경우
+//Omit 원하는 것만 제외하는 경우
 type UserApiState5 = Omit<ApiState, "getPost">;
 
 //keyof
