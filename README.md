@@ -1111,7 +1111,6 @@ if ("age" in dogCat2) {
 
 ```ts
 //객체 끼리의 인터섹션
-
 type PersonT = {
   name: string;
   age: number;
@@ -1130,13 +1129,13 @@ const hong: PersonAndCompany = { age: 20, name: "gildong", regNumber: 1234, comp
 
 ```ts
 //Key Value 매핑
-
 enum State {
   LOADING,
   SUCCESS,
   ERROR,
   INITIAL,
 }
+
 //API 타입 1
 type ApiState = {
   getUser: State | string | number | undefined;
