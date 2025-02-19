@@ -963,7 +963,7 @@ let members: string[] = ["hong", "kim", "go"];
 //튜플
 let membersTuple: [string, string, string] = ["hong", "kim", "go"];
 //무조건 순서에 맞는 타입의 요소를 넣어야 한다.
-let hong: [number, string] = [20, "gilding"];
+let hong: [number, string] = [20, "gildong"];
 hong.push("male"); //js에서 배열이 바뀌므로 오류없음([20,"gildong","man"])
 
 //Tuple의 요소 개수를 지켜주려면
