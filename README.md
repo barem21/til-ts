@@ -1,6 +1,7 @@
 # Primitive (기본데이터 형)
 
 - js와 ts에 모두 있는 데이터형
+-
 
 ```ts
 //Primitive (기본데이터 형)
@@ -74,10 +75,10 @@ const stringNumberArrGe: Array<string | number> = ["A", 1, "B", 2];
 const stringNumberBooleanArrGe: Array<string | number | boolean> = ["A", 1, true, "B", 2, false];
 ```
 
-## Object (객체리터럴)
+## Object (객체 리터럴)
 
 ```ts
-//Object(객체리터럴)
+//Object(객체 리터럴)
 const obj: object = {};
 const personObject: { name: string; age: number } = { name: "길동", age: 17 };
 ```
@@ -764,7 +765,7 @@ if (isDogTypeReturn(dogs)) {
 }
 ```
 
-# type과 interface의 차이
+# type 과 interface 의 차이 3
 
 - 1번은 type과 interface는 만드는 법이 다르더라.
 
@@ -963,7 +964,7 @@ let members: string[] = ["hong", "kim", "go"];
 //튜플
 let membersTuple: [string, string, string] = ["hong", "kim", "go"];
 //무조건 순서에 맞는 타입의 요소를 넣어야 한다.
-let hong: [number, string] = [20, "gildong"];
+let hong: [number, string] = [20, "gilding"];
 hong.push("male"); //js에서 배열이 바뀌므로 오류없음([20,"gildong","man"])
 
 //Tuple의 요소 개수를 지켜주려면
@@ -1101,10 +1102,10 @@ dogCat2.breed; //오류 발생
 
 //타입 좁히기로 데이터 파악
 if ("age" in dogCat2) {
-  // const dogCat2: Dog
+  //const dogCat2: Dog
   dogCat2;
 } else {
-  // const dogCat2: cat
+  //const dogCat2: cat
   dogCat2;
 }
 ```
@@ -1166,7 +1167,7 @@ type UserApiState3 = {
 };
 
 //API 타입 5
-//유틸리티 타입 (수요일 쯤에 정리해 드릴께요.)
+// 유틸리티 타입 (수요일 쯤에 정리해 드릴께요.)
 
 //Pick 원하는 것만 뽑을 경우
 type UserApiState4 = Pick<ApiState, "getUser" | "paginateUser" | "defeceUser">;
@@ -1192,4 +1193,666 @@ type UserApiState7 = { [key in Exclude<keyof ApiState, "getPost">]: ApiState[key
 
 //항목 한개 빼고 모두 옵션으로 바꾸어라
 type UserApiState8 = { [key in Exclude<keyof ApiState, "getPost">]?: ApiState[key] }; //getPost 속성은 제거하고 나머지를 뽑아서 정의하라
+```
+
+# class
+
+- 우리가 정의하기 보다는 라이브러리들이 정의되어진 경우가 많다.
+
+```ts
+//class
+
+//정의하는 법
+class SmapleClass {}
+
+//기본형
+class Game {
+  //속성
+  name: string;
+  country: string;
+  count: number;
+
+  //new Game(...)하면 실행되는 인스턴스 생성자 함수
+  constructor(name: string, country: string, count: number) {
+    this.name = name;
+    this.country = country;
+    this.count = count;
+  }
+
+  //메서드
+  hi(): void {
+    console.log(this.name, this.country, this.count);
+  }
+}
+```
+
+```ts
+//읽기전용 속성
+class User {
+  //속성(읽기전용)
+  readonly name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+const hong = new User("hong", 20);
+hong.age = 10;
+hong.name = "gilding"; //오류 발생(읽기전용)
+```
+
+```ts
+//속성 초기화하는 방법
+class Person {
+  //필수로 값을 할당해야 한다. (constructor)
+  name: string;
+  age: number = 10; //초기값 세팅
+  pet?: string; //옵셔널(optional) 선언
+  petAge: number | undefined; //undefined라서 필수값 아님
+
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+```
+
+```ts
+//초기값은 내가 보증한다.
+class Go {
+  stack!: string[]; //반드시 있다는 표현 !
+  constructor() {
+    this.init();
+  }
+  init() {
+    this.stack = [];
+  }
+}
+```
+
+```ts
+//let dong:Dog
+let dog = new Dog("흰둥이");
+dog = 123; //타입 오류
+dog = "댕댕이"; //타입 오류
+
+dog = {
+  name: "멈멈미",
+  bark: () => {
+    console.log("멍멍");
+  },
+};
+```
+
+```ts
+//interface를 구현(implementation)
+//약속을 지켜서 모든 내용을 채워라!
+interface Animal {
+  name: string;
+  age: number;
+  jump(): string;
+}
+class Dog2 implements Animal {
+  //구현을 해야하는 항목
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+  jump(): string {
+    return this.name;
+  }
+
+  //class만의 기능
+  go(): void {}
+}
+
+interface Pet {
+  legs: number;
+  bark(): void;
+}
+class Cat implements Animal, Pet {
+  //Animal구현
+  name: string;
+  age: number;
+  //Pet구현
+  legs: number;
+
+  constructor(name: string, age: number, legs: number) {
+    this.name = name;
+    this.age = age;
+    this.legs = legs;
+  }
+
+  //Animal구현
+  jump(): string {
+    return this.name;
+  }
+  //Pet구현
+  bark(): void {}
+}
+
+// 타입으로
+type AnimalAndPet = Animal & Pet;
+
+class Cat2 implements AnimalAndPet {
+  // Animal 구현
+  name: string;
+  age: number;
+  // Pet 구현
+  legs: number;
+  constructor(name: string, age: number, legs: number) {
+    this.name = name;
+    this.age = age;
+    this.legs = legs;
+  }
+  // Animal 구현
+  jump(): string {
+    return this.name;
+  }
+  // Pet 구현
+  bark(): void {}
+}
+```
+
+```ts
+//클래스
+//아래 내용은 상당히 고급 내용인데 활용이 많이 된다.
+//constructor가 있는 인터페이스 정의
+//특히 제네릭에서 많이 활용
+
+class Hong {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+interface IConstructor {
+  new (name: string, age: number): Hong;
+}
+
+function createHong(constructor: IConstructor, name: string, age: number) {
+  return new constructor(name, age);
+}
+let hong = createHong(Hong, "gildong", 20);
+```
+
+```ts
+//클래스
+//상속 (유전자 내려받고 확장한다.)
+
+class Parent {
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+}
+class Child extends Parent {
+  age: number;
+  constructor(name: string, age: number) {
+    super(name);
+    this.age = age;
+  }
+}
+
+let father = new Parent("hong");
+father.name;
+
+let son = new Child("gildong", 20);
+son.name;
+```
+
+```ts
+//클래스
+//접근 제한자 (visibility keyword)
+//1. public : 코드 어디서나 접근 가능
+//2. protected : 현재 클래스와 자식 클래스에서 접근 가능
+//3. private : 현재 클래스에서만 접근 가능
+
+class Mother {
+  public publicProperty: string = "public";
+  protected protectedProperty: string = "protected";
+  private privateProperty: string = "private";
+
+  //js에 존재하는 문법
+  #jsPrivate: string = "jsPrivate";
+
+  test() {
+    this.publicProperty;
+    this.protectedProperty;
+    this.privateProperty;
+  }
+}
+
+class Son extends Mother {
+  gogo() {
+    this.publicProperty; //가능(public 접근가능)
+    this.protectedProperty; //가능(상속이므로 protected 접근 가능)
+    this.privateProperty; //불가능(상속이더라도 private라서)
+    this.#jsPrivate; //불가능(상속이더라도 private라서)
+  }
+}
+
+const instance = new Son();
+instance.publicProperty;
+instance.protectedProperty; //외부에서 접근불가
+instance.privateProperty; //외부에서 접근불가
+instance.#jsPrivate; //외부에서 접근불가
+```
+
+# Generic
+
+- 타입을 마치 변수처럼 전달하기
+
+```ts
+//제네릭
+//함수에서 제네릭 사용하기
+//실행중에 변수타입을 전달할 수 없을까? Generic을 이용하여 보자!
+
+function whatValue(value: any) {
+  return value;
+}
+//const v: any
+const v = whatValue("hello");
+v.toFixed(3); //이건 오류
+
+//T는 아무 의미가 없다.
+function genericWhatValue<T>(value: T): T {
+  return value;
+}
+//const a: string
+const a = genericWhatValue<string>("hello"); //genericWhatValue(value: string): string{}과 동일
+//const b: number
+const b = genericWhatValue<number>(10); ////genericWhatValue(value: number): number{}과 동일
+
+//여러개의 변수타입을 전달가능
+function genericMulti<T, U>(a: T, b: U): { a: T; b: U } {
+  return { a, b };
+}
+const c = genericMulti<string, number>("hi", 10);
+
+//클래스에서 제네릭 사용하기
+class Hong {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+class Car {
+  brand: string;
+  codeName: string;
+
+  constructor(brand: string, codeName: string) {
+    this.brand = brand;
+    this.codeName = codeName;
+  }
+}
+//인스턴스를 자동으로 만들어주는 함수
+//형태만 봐두자. 일단은 복붙해서 쓰자.
+function makeInstance<T extends { new (...args: any[]): {} }>(constructor: T, ...args: any) {
+  return new constructor(...args);
+}
+const hong = makeInstance(Hong, "gildong", 20); //const go = new Hong("gildong", 20);
+const kia = makeInstance(Car, "KIA", "K5"); //const kia = new Car("K5", "KIA");
+```
+
+```ts
+//제네릭
+//인터페이스에서 제네릭 사용하기
+
+interface DataCatch<T> {
+  data: T[];
+  lastUpdate: Date;
+}
+const data: DataCatch<string> = {
+  data: ["a", "b", "c"],
+  lastUpdate: new Date(),
+};
+const data2: DataCatch<number> = {
+  data: [1, 2, 3],
+  lastUpdate: new Date(),
+};
+
+//기본타입을 지정할 수도 있다.
+interface DefineType<T = string> {
+  data: T;
+}
+interface DefineType2<T = {}> {
+  data: T;
+}
+//아래는 기본타입 적용됨
+const a: DefineType = { data: "hello" };
+//아래는 사용자가 타입 지정
+const b: DefineType<number> = { data: 10 };
+```
+
+```ts
+//제네릭
+//타입에서 제네릭 사용하기
+
+type Sample = string;
+type Sample2 = number;
+type Sample3 = boolean;
+
+type GenericSample<T> = T;
+const a: GenericSample<string> = "hello"; //const a: string
+const b: GenericSample<number> = 10; //const b: number
+const c: GenericSample<boolean> = true; //const c: boolean
+
+interface DoneState<T> {
+  data: T[];
+}
+interface LoadingState {
+  data: Date;
+}
+interface ErrorState {
+  data: Error;
+}
+type State<T = string> = DoneState<T> | LoadingState | ErrorState;
+let state: State = {
+  data: ["a", "b", "c"],
+};
+state = {
+  data: new Date(),
+};
+state = {
+  data: new Error("loading fail"),
+};
+
+interface TodoType {
+  id: number;
+  title: string;
+}
+let todoState: State<TodoType> = {
+  data: [
+    { id: 1, title: "hello" },
+    { id: 2, title: "hi" },
+  ],
+};
+```
+
+```ts
+//제네릭
+//클래스 정의에서 제네릭 사용하기
+
+class Pagenation<T, U> {
+  //초기화
+  data: T[] = [];
+  message?: U;
+  lastDate?: T;
+}
+let p = new Pagenation<number, string>();
+let q = new Pagenation<string, string>();
+
+class Pagenation2<T, U, S> {
+  //초기화
+  data: T[] = [];
+  message?: U;
+  lastDate?: S;
+
+  //constructor에 제네릭 적용하기
+  constructor(data: T[], message?: U, lastDate?: S) {
+    this.data = data;
+    this.message = message;
+    this.lastDate = lastDate;
+  }
+}
+let r = new Pagenation2<string, string, Date>(["a", "b", "c"], "hellow", new Date());
+```
+
+```ts
+//제네릭
+//클래스 상속에서 제네릭 사용하기
+
+class Base<T> {
+  //초기값이 있는 경우
+  data: T[] = [];
+}
+class StringBase extends Base<string> {}
+const a = new StringBase();
+a.data; //Base<string>.data: string[]
+
+//자식 클래스가 타입변수 정의
+class UserBase<U> extends Base<U> {}
+const b = new UserBase<number>();
+b.data; //Base<number>.data: number[]
+const c = new UserBase<string>();
+c.data; //Base<string>.data: string[]
+
+//interface 상속
+interface BasicI {
+  name: string;
+}
+class User<T extends BasicI> {
+  //초기값이 없는 경우
+  information: T;
+  constructor(information: T) {
+    this.information = information;
+  }
+}
+//let hong: User<{ name: string; age: number }>;
+let hong = new User({ name: "gildong", age: 20 });
+
+//keyof를 같이 사용하기(속성명 알아내기)
+const obj = { a: 1, b: 2, c: 3 };
+function objectParser<T, U extends keyof T>(v1: T, v2: U) {
+  return v1[v2];
+}
+const e = objectParser(obj, "a");
+
+//3항 연산자 예제
+class User2 {
+  //초기화가 필요하므로 constructor에서 할당
+  type?: string; //string, 또는 undefined
+}
+class MaleUser extends User2 {
+  type = "남성 사용자";
+}
+class FemaleUser extends User2 {
+  type = "여성 사용자";
+}
+type SpecialUser<T extends User2> = T extends MaleUser ? MaleUser : FemaleUser;
+const user1: SpecialUser<FemaleUser> = new FemaleUser();
+user1.type; //여성 사용자
+const user2: SpecialUser<MaleUser> = new MaleUser();
+user2.type; //남성 사용자
+```
+
+```ts
+//제네릭
+//클래스 메서드에서 제네릭 사용하기
+
+class User<T> {
+  //속성
+  id: T;
+  name: string;
+
+  constructor(id: T, name: string) {
+    this.id = id;
+    this.name = name;
+  }
+
+  //메서드에 제네릭 적용
+  sayHello<M>(memo: M) {
+    return memo;
+  }
+}
+const hong = new User<string>("hong", "gildong");
+//hong.sayHello<string>("hello");
+hong.sayHello("hello"); //타입추론 적용
+//hong.sayHello<number>(100);
+hong.sayHello(100); //타입추론 적용
+
+//아래는 한번 체크합시다!
+class User2<T> {
+  sayHello<T>(memo: T) {
+    return memo;
+  }
+}
+const hong2 = new User2<string>();
+hong2.sayHello<number>(100);
+hong2.sayHello(200);
+```
+
+```ts
+//제네릭
+//클래스 Implementation에서 제네릭 사용하기
+//약속을 지켜라
+
+interface Singer<T, U> {
+  name: T;
+  sing(year: U): void;
+}
+class User implements Singer<string, number> {
+  //속성 초기값 필요
+  name: string;
+  constructor(name: string) {
+    this.name = name;
+  }
+  sing(year: number): void {
+    console.log(year);
+  }
+}
+const hong = new User("gildong");
+
+class User2<T, U> implements Singer<T, U> {
+  //속성 초기값 필요
+  name: T;
+  constructor(name: T) {
+    this.name = name;
+  }
+  sing(year: U): void {
+    console.log(year);
+  }
+}
+const hong2 = new User2<string, number>("gildong");
+```
+
+```ts
+//제네릭
+//Promise 에서 제네릭 사용하기
+
+const afterTwoTime = function (): Promise<string> {
+  return new Promise((resolve) => {
+    resolve("hi");
+  });
+};
+```
+
+# Utility 타입
+
+```ts
+//Utility
+//Partial Type (가장 많이 사용하는 Utility 타입)
+//모든 속성에 ?을 붙인다.
+//객체의 일부분만 수정하기
+interface User {
+  name: string;
+  age: number;
+  country: string;
+}
+const hong: User = {
+  name: "gildong",
+  age: 20,
+  country: "ko",
+};
+type UserPartial = Partial<User>;
+function updateUser(origin: User, update: UserPartial): User {
+  return { ...origin, ...update };
+}
+const hong2 = updateUser(hong, { age: 17, country: "korea" });
+
+//Require
+//모두 필수 속성으로 바꿈
+interface Cat {
+  name: string;
+  age?: number;
+  breed?: string;
+}
+//type CatRequire = { name: string; age: number; breed: string };
+type CatRequire = Required<Cat>;
+
+//Readonly
+//모두 읽기전용 속성으로 바꿈
+interface Cat2 {
+  name: string;
+  age?: number;
+  breed?: string;
+}
+//type CatReadonly = { readonly name: string; readonly age?: number | undefined; readonly breed?: string | undefined };
+type CatReadonly = Readonly<Cat>;
+
+//Pick
+//특정 속성만 선택해서 사용
+interface Cat3 {
+  name: string;
+  age?: number;
+  breed?: string;
+}
+//type CatPick = { age?: number | undefined; breed?: string | undefined };
+type CatPick = Pick<Cat, "age" | "breed">;
+
+//Omit
+//특정 속성만 제외해서 선택
+interface Cat4 {
+  name: string;
+  age?: number;
+  breed?: string;
+}
+//type CatOmit = { age?: number | undefined; breed?: string | undefined };
+type CatOmit = Omit<Cat, "name">;
+
+//Exclude
+//특정 타입을 제외하고 사용
+//type NoString = number | boolean
+type NoString = Exclude<string | boolean | number, string>;
+type Candy = "초코" | "딸기" | "바나나" | "사과";
+type RemainingCandy = Exclude<Candy, "초코" | "바나나">;
+
+//Extract
+//특정 타입을 추출해서 사용
+type NoString2 = Extract<string | boolean | number, string>; //type NoString2 = string
+type Candy2 = "초코" | "딸기" | "바나나" | "사과";
+type RemainingCandy2 = Extract<Candy, "초코" | "바나나">; //type RemainingCandy2 = "초코" | "바나나"
+
+//Parameters
+//매개변수 타입을 사용
+function fun(x: number, y: number, z: boolean) {}
+type TParams = Parameters<typeof fun>; //type TParams = [x: number, y: number, z: boolean]
+type TParamsVoid = Parameters<(a: number) => void>; //type TParamsVoid = [a: number]
+
+//ConstructorParameters
+//생성자 함수의 타입
+class User {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+}
+type TCS = ConstructorParameters<typeof User>; //type TCS = [name: string, age: number]
+
+//ReturnType
+//함수의 리턴 타입
+type sFn = (a: number) => number;
+type RT = ReturnType<sFn>; //type RT = number
+type RT2 = ReturnType<() => void>; //type RT2 = void
+
+//Template Literal Type
+type Hong = "Gildong";
+type UHong = Uppercase<Hong>; //type UHong = "GILDONG"
+type sHong = Lowercase<Hong>; //type sHong = "gildong"
+type cHong = Capitalize<Hong>; //type cHong = "Gildong"
+type uHong = Uncapitalize<Hong>; //type uHong = "gildong"
 ```
